@@ -2,7 +2,6 @@ package com.github.shadowsocks
 
 import android.app.ProgressDialog
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import com.github.shadowsocks.utils.Cons
 import com.github.shadowsocks.utils.HttpManager
@@ -56,6 +55,7 @@ class RegisterActivity : AppCompatActivity() {
                 Cons.end_date = params?.get("end_date")?.asString ?: ""
                 Cons.start_date = params?.get("start_date")?.asString ?: ""
                 dialog.dismiss()
+                finish()
             }
         },{e->
             ToastUtil.showShort(this,"注册失败")

@@ -54,14 +54,14 @@ import com.github.shadowsocks.database.Profile
 import com.github.shadowsocks.database.ProfileManager
 import com.github.shadowsocks.preference.DataStore
 import com.github.shadowsocks.preference.OnPreferenceDataStoreChangeListener
-import com.github.shadowsocks.utils.Key
-import com.github.shadowsocks.utils.responseLength
-import com.github.shadowsocks.utils.thread
+import com.github.shadowsocks.utils.*
 import com.github.shadowsocks.widget.ServiceButton
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.DrawerBuilder
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.InetSocketAddress
@@ -287,6 +287,42 @@ class MainActivity : AppCompatActivity(), ShadowsocksConnection.Interface, Drawe
 
         val intent = this.intent
         if (intent != null) handleShareIntent(intent)
+
+        if (Cons.token.isNotEmpty()) {
+            HttpManager.httpService.circuit(mapOf("token" to Cons.token)).subscribeOn(Schedulers.io()).observeOn(
+                AndroidSchedulers.mainThread()).subscribe({
+                if (it.get("code").asString == "200") {
+                    Cons.serverList = it.getAsJsonArray("list")
+                    if (Cons.serverList!=null&& Cons.serverList?.size()!! >0) {
+                        ProfileManager.clear()
+                    }
+                    for (server in it.getAsJsonArray("list")) {
+                        server?.let {
+                            val serverOb = it.asJsonObject
+                            val profile = Profile()
+                            profile.tlId= serverOb.get("_id").asString
+                            profile.host = serverOb.get("server_host").asString
+                            profile.name = serverOb.get("key_name").asString
+                            profile.remotePort = serverOb.get("server_port").asInt
+                            profile.password = serverOb.get("server_password").asString
+                            when(serverOb.get("encry_mode").asInt){
+                                1-> profile.method = "aes-128-cfb"
+                                2-> profile.method = "aes-192-cfb"
+                                3-> profile.method = "aes-256-cfb"
+                            }//1=aes-128-cfb,2=aes-192-cfb,3=aes-256-cfb
+//                            profile.host = serverOb.get("server_host").asString
+//                            profile.host = serverOb.get("server_host").asString
+                            ProfileManager.createProfile(profile)
+                        }
+                    }
+                } else {
+                    ToastUtil.showShort(this,it.get("remark").asString)
+                }
+            },{e->
+                ToastUtil.showShort(this,"获取服务器信息失败,请检查网络或稍后重试")
+                e.printStackTrace()
+            })
+        }
     }
 
     override fun onNewIntent(intent: Intent) {

@@ -48,7 +48,7 @@ IF NOT EXIST %ANDROID_X86_CC% (
 
 IF NOT EXIST %DIR%\go\bin\go.exe (
     ECHO "Build the custom go"
-
+    ECHO "%DIR%"
     PUSHD %DIR%\go\src
     CALL make.bat
     POPD

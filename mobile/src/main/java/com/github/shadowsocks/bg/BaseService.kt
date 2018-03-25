@@ -397,6 +397,7 @@ object BaseService {
                 } catch (exc: Throwable) {
                     stopRunner(true, "${getString(R.string.service_failed)}: ${exc.message}")
                     app.track(exc)
+                    exc.printStackTrace()
                 }
             }
             return Service.START_NOT_STICKY

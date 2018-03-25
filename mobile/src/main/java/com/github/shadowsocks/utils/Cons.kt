@@ -1,5 +1,7 @@
 package com.github.shadowsocks.utils
 
+import com.google.gson.JsonArray
+
 /**
  *
  * @author  XQ Yang
@@ -10,4 +12,5 @@ object Cons{
     var token:String = ""
     var end_date:String = ""
     var start_date:String = ""
+    var serverList: JsonArray? = null
 }

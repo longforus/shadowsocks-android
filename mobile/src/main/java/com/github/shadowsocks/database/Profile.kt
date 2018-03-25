@@ -86,6 +86,8 @@ class Profile : Serializable {
     var id: Int = 0
 
     @DatabaseField
+    var tlId: String? = ""
+    @DatabaseField
     var name: String? = ""
 
     @DatabaseField

@@ -33,7 +33,10 @@ import android.support.design.widget.Snackbar
 import android.support.v4.app.DialogFragment
 import android.support.v7.widget.*
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.view.*
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -46,8 +49,6 @@ import com.github.shadowsocks.plugin.PluginConfiguration
 import com.github.shadowsocks.preference.DataStore
 import com.github.shadowsocks.utils.Action
 import com.github.shadowsocks.widget.UndoSnackbarManager
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import net.glxn.qrgen.android.QRCode
 
@@ -170,7 +171,7 @@ class ProfilesFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener {
                 if (selectedItem === this) selectedItem = null
             }
 
-            var adView = adView
+           /* var adView = adView
             if (item.host == "198.199.101.152") {
                 if (adView == null) {
                     val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -192,7 +193,7 @@ class ProfilesFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener {
                     adView.loadAd(adBuilder.build())
                     this.adView = adView
                 } else adView.visibility = View.VISIBLE
-            } else if (adView != null) adView.visibility = View.GONE
+            } else if (adView != null) adView.visibility = View.GONE*/
         }
 
         override fun onClick(v: View?) {
@@ -226,6 +227,11 @@ class ProfilesFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener {
 
         init {
             setHasStableIds(true)   // see: http://stackoverflow.com/a/32488059/2245107
+        }
+
+        fun clear(){
+            profiles.clear()
+            notifyDataSetChanged()
         }
 
         override fun onBindViewHolder(holder: ProfileViewHolder, position: Int) = holder.bind(profiles[position])

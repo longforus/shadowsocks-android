@@ -92,4 +92,10 @@ object ProfileManager {
         app.track(ex)
         null
     }
+
+    fun clear(){
+        PrivateDatabase.profileDao.delete(getAllProfiles())
+        ProfilesFragment.instance?.profilesAdapter?.clear()
+    }
+
 }

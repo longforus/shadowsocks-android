@@ -3,10 +3,7 @@ package com.github.shadowsocks.utils
 import com.google.gson.JsonObject
 import io.reactivex.Observable
 import okhttp3.RequestBody
-import retrofit2.http.Body
-import retrofit2.http.FieldMap
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 
 /**
  *
@@ -15,8 +12,12 @@ import retrofit2.http.POST
  */
 interface HttpService{
     @GET("/ssr/auth/login.do")
-    fun login(@FieldMap map:Map<String,String>):Observable<JsonObject>
+    fun login(@QueryMap map: Map<String,String>):Observable<JsonObject>
 
     @POST("/ssr/auth/register.do")
     fun register(@Body body:RequestBody):Observable<JsonObject>
+
+    @FormUrlEncoded
+    @POST("/ssr/server/circuit.do")
+    fun circuit(@FieldMap map: Map<String,String>):Observable<JsonObject>
 }
